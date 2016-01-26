@@ -4,6 +4,8 @@
                          ("melpa" . "http://melpa.milkbox.net/packages/")))
 
 ;;tramp shit
+;; I really don't know which one of these incantantions makes
+;; the magic happen (loading R remotely via ESS and tramp), but here they are
 (require 'tramp)
 (require 'tramp-sh)
 
@@ -12,6 +14,9 @@
      (tramp-parse-sconfig "~/.ssh/config")))
 
 (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
+
+(add-to-list 'tramp-remote-process-environment
+             (format "DISPLAY=%s" (getenv "DISPLAY")))
 
 (package-initialize)
 (when (not package-archive-contents) (package-refresh-contents))
@@ -25,9 +30,6 @@
 (setq ess-ask-for-ess-directory nil)
 (setq inferior-ess-own-frame t)
 
-(add-to-list 'tramp-remote-process-environment
-             (format "DISPLAY=%s" (getenv "DISPLAY")))
-
 ;; This is the magic line to encourage new frames
 (setq split-window-preferred-function nil)
 
@@ -40,7 +42,6 @@
 
 (require 'ido)
 (ido-mode t)
-
 
 (require 'auto-complete)
 (ac-config-default)
