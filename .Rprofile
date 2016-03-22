@@ -6,7 +6,7 @@ options("repos" = c(CRAN = "http://cran.rstudio.com/"))
 
 options("max.print"=1000)
 library(patr1ckm)
-
+Sys.setenv(PATH=paste0(Sys.getenv("PATH"),":/Users/pmille13/bin"))
 ## .First() run at the start of every R session. 
 ## Use to load commonly used packages? 
 .First <- function() {
