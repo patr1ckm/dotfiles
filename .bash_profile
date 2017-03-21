@@ -3,7 +3,10 @@ alias ls='ls -G '
 alias sl='ssh pmille13@lubkelab.psych.nd.edu'
 alias s1='ssh pmille13@crcfe01.crc.nd.edu'
 alias s2='ssh pmille13@crcfe02.crc.nd.edu'
-
+alias s3='ssh pmille13@crcfe03.crc.nd.edu'
+alias hstart="/usr/local/Cellar/hadoop/2.7.2/sbin/start-dfs.sh;/usr/local/Cellar/hadoop/2.7.2/sbin/start-yarn.sh"
+alias hstop="/usr/local/Cellar/hadoop/2.7.2/sbin/stop-yarn.sh;/usr/local/Cellar/hadoop/2.7.2/sbin/stop-dfs.sh"
+alias tc='TeXcount'
 
 PATH=$PATH:~/bin ; export PATH
 
@@ -26,3 +29,4 @@ export PATH=/usr/local/bin:$PATH
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 export PATH=/usr/local/redis/bin:$PATH
+

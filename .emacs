@@ -1,71 +1,76 @@
 (require 'package)
-(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                         ("marmalade" . "http://marmalade-repo.org/packages/")
-                         ("melpa" . "http://melpa.milkbox.net/packages/")))
 
-;;tramp shit
-;; I really don't know which one of these incantantions makes
-;; the magic happen (loading R remotely via ESS and tramp), but here they are
-(require 'tramp)
-(require 'tramp-sh)
+;; Python stuff
+;; https://realpython.com/blog/python/emacs-the-best-python-editor/
 
-(tramp-set-completion-function "ssh"
-   '((tramp-parse-sconfig "/etc/ssh_config")
-     (tramp-parse-sconfig "~/.ssh/config")))
-
-(add-to-list 'tramp-remote-path 'tramp-own-remote-path)
-
-(add-to-list 'tramp-remote-process-environment
-             (format "DISPLAY=%s" (getenv "DISPLAY")))
+(add-to-list 'package-archives
+       '("melpa" . "http://melpa.org/packages/") t)
 
 (package-initialize)
-(when (not package-archive-contents) (package-refresh-contents))
+(when (not package-archive-contents)
+  (package-refresh-contents))
 
-(require 'ess-site)
-(load "ess-site.el")
+(defvar myPackages
+  '(better-defaults
+    elpy
+    material-theme))
 
-(load "auctex.el" nil t t)
-(setq TeX-PDF-mode t)
-(show-paren-mode t)
-(setq ess-ask-for-ess-directory nil)
-(setq inferior-ess-own-frame t)
+(mapc #'(lambda (package)
+    (unless (package-installed-p package)
+      (package-install package)))
+      myPackages)
 
-;; This is the magic line to encourage new frames
-(setq split-window-preferred-function nil)
+(elpy-enable)
+
+;; 
+;; --------------------------------------
+
+;;(setq inhibit-startup-message t) ;; hide the startup message
+(load-theme 'material t) ;; load material theme
+(global-linum-mode t) ;; enable line numbers globally
 
 
-;; Show filename in title bar
-;;(setq frame-title-format "%b - Emacs")
+;; This is an el-capitain related bug which displays a 'visible' bell at certain events
+;; This replaces the visible bug with a message
+(setq ring-bell-function (lambda () (message "*woop*")))
 
-;; Rembember password when logging in from tramp
+
+;; R
+
+(add-to-list 'load-path "~/Software/ESS/lisp/")
+(load "ess-site")
+(setq ess-ask-for-ess-directory nil) ;; start R in current working directory
+
+
+;; Julia
+;; deleted for now
+
+
+;; Remote Connections
+;; don't make tramp prompt for cache
+(require 'tramp)
 (setq password-cache-expiry nil)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (undo-tree tabbar py-autopep8 material-theme magit julia-mode flycheck exec-path-from-shell elpy better-defaults auto-complete auctex)))
+ '(python-shell-interpreter "python3"))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
 
-(require 'ido)
-(ido-mode t)
+;; tree mode
 
-(require 'auto-complete)
-(ac-config-default)
-(global-auto-complete-mode t)
-
-
-;;(let ((default-directory "~/.emacs.d/elpa/"))
-;;    (normal-top-level-add-to-load-path '("."))
-;;(normal-top-level-add-subdirs-to-load-path))
-
-;;(require 'python-mode)
-;;(setq py-shell-switch-buffers-on-execute-p t)
-;;(setq py-switch-buffers-on-execute-p t)
-; don't split windows
-;;(setq py-split-windows-on-execute-p nil)
-; try to automagically figure out indentation
-;;(setq py-smart-indentation t)
-
-;;(eval-after-load "python"
-;;  '(progn
-;;     (define-key python-mode-map (kbd "C-c C-r") 'python-shell-send-region)))
-
-;;(require 'tabbar nil t)
-;;(tabbar-mode 1)
-;;(global-set-key [M-left] 'tabbar-backward-tab)
-;;(global-set-key [M-right] 'tabbar-forward-tab)
-(put 'downcase-region 'disabled nil)
+(global-undo-tree-mode 1)
+;; make ctrl-z undo
+(global-set-key (kbd "C-z") 'undo)
+;; make ctrl-Z redo
+(defalias 'redo 'undo-tree-redo)
+(global-set-key (kbd "C-S-z") 'redo)
